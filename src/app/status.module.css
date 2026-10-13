@@ -1,0 +1,126 @@
+/* ---------- STATUS SCREENS ---------- */
+/* Shared by error and not-found. Same voice as the console: paper, hairlines,
+   no illustrations, no apology.
+
+   There is deliberately no loading.tsx. A root loading boundary makes every
+   route stream, which commits a 200 header before the page body runs — so
+   notFound() could no longer set a 404 and a missing dispute answered 200
+   with the not-found page inside it. A correct status code is worth more
+   than a loading shimmer on pages that render in about a second. */
+
+.wrap {
+  max-width: var(--measure);
+  padding-top: var(--space-2xl);
+}
+
+.title {
+  font-size: var(--text-display-s);
+}
+
+.body {
+  margin-top: var(--space-sm);
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  color: var(--color-ink-2);
+  text-wrap: pretty;
+}
+
+.body code {
+  font-family: var(--font-data);
+  font-size: 0.9em;
+  padding: 0.1em 0.3em;
+  background: var(--color-paper-2);
+  border: var(--rule-hair) solid var(--color-rule);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 2px solid var(--color-ink);
+}
+
+.primary {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--color-ink);
+  color: var(--color-paper);
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-sharp);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-out);
+}
+
+.primary:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.primary:active {
+  transform: translateY(1px);
+}
+
+.quiet {
+  font-size: var(--text-sm);
+  color: var(--color-ink-3);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-rule-strong);
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.quiet:hover {
+  color: var(--color-ink);
+  border-bottom-color: var(--color-ink);
+}
+
+.meta {
+  margin-top: var(--space-lg);
+  font-size: var(--text-micro);
+  color: var(--color-ink-3);
+}
+
+/* ---------- LOADING ---------- */
+
+.loading {
+  display: block;
+  margin-bottom: var(--space-sm);
+}
+
+.bar {
+  display: block;
+  height: 2px;
+  width: 100%;
+  max-width: 18rem;
+  background: var(--color-rule);
+  overflow: hidden;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  width: 40%;
+  background: var(--color-accent);
+  animation: sweep 1.4s var(--ease-in-out) infinite;
+}
+
+@keyframes sweep {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .barFill {
+    animation: none;
+    width: 100%;
+    opacity: 0.4;
+  }
+}

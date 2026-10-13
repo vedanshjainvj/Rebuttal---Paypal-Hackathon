@@ -1,0 +1,29 @@
+/* ---------- WORKBENCH SHELL ---------- */
+
+.shell {
+  display: grid;
+  grid-template-columns: var(--rail-width) minmax(0, 1fr);
+  min-height: 100dvh;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: var(--space-2xl) var(--space-2xl) var(--space-3xl);
+}
+
+@media (max-width: 900px) {
+  .shell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .main {
+    padding: var(--space-xl) var(--space-md) var(--space-2xl);
+  }
+}

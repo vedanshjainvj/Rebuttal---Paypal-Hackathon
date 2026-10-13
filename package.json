@@ -1,0 +1,52 @@
+{
+  "name": "abc",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:status": "tsx scripts/db-status.ts",
+    "ai:doctor": "tsx scripts/ai-doctor.ts",
+    "dispute:sync": "tsx scripts/dispute-sync.ts",
+    "packet:draft": "tsx scripts/packet-draft.ts",
+    "evidence:seed": "tsx scripts/evidence-seed.ts",
+    "evidence:search": "tsx scripts/evidence-search.ts",
+    "paypal:doctor": "tsx scripts/paypal-doctor.ts",
+    "paypal:webhook": "tsx scripts/paypal-webhook.ts",
+    "db:studio": "drizzle-kit studio",
+    "db:setup": "npm run db:generate && npm run db:migrate && npm run db:seed",
+    "grounding:probe": "tsx scripts/grounding-probe.ts",
+    "worker": "tsx worker/index.ts",
+    "worker:once": "tsx worker/index.ts --once",
+    "job": "tsx scripts/job.ts",
+    "db:notify-check": "tsx scripts/notify-check.ts"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.6",
+    "drizzle-orm": "^0.45.3",
+    "next": "16.4.0",
+    "pino": "^10.4.0",
+    "pino-pretty": "^13.2.0",
+    "postgres": "^3.4.9",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.11",
+    "tsx": "^4.23.15",
+    "typescript": "^5"
+  }
+}

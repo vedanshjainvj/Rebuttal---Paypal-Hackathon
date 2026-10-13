@@ -1,0 +1,29 @@
+/* ---------- PLACEHOLDER ---------- */
+
+.wrap {
+  max-width: var(--measure);
+}
+
+.title {
+  font-size: var(--text-display-s);
+}
+
+.intent {
+  margin: var(--space-sm) 0 var(--space-xl);
+  font-size: var(--text-lg);
+  color: var(--color-ink-2);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--space-sm);
+  border-top: var(--rule-hair) solid var(--color-rule);
+}
+
+.item {
+  padding: var(--space-sm) 0;
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+}

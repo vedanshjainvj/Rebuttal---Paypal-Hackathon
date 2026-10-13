@@ -1,0 +1,73 @@
+/* Hallmark · macrostructure: Workbench · nav: N3 side-rail · footer: none (status rail)
+ * genre: editorial · theme: custom
+ * vibe: forensic paper, case file, deadline ink
+ * paper oklch(96.8% 0.006 85) · accent oklch(47% 0.168 25) oxblood
+ * display Instrument Serif + body Public Sans + data JetBrains Mono
+ * axes: light paper / classical-serif display / warm accent
+ * pre-emit critique: P5 H5 E4 S5 R5 V5
+ */
+
+:root {
+  /* ---------- PAPER AND INK ---------- */
+  --color-paper: oklch(96.8% 0.006 85);
+  --color-paper-2: oklch(94.2% 0.008 85);
+  --color-paper-3: oklch(90.5% 0.01 85);
+  --color-ink: oklch(20% 0.01 60);
+  --color-ink-2: oklch(40% 0.008 60);
+  --color-ink-3: oklch(56% 0.006 60);
+
+  /* ---------- RULES ---------- */
+  --color-rule: oklch(86% 0.008 85);
+  --color-rule-strong: oklch(72% 0.01 85);
+
+  /* ---------- SIGNAL ---------- */
+  --color-accent: oklch(47% 0.168 25);
+  --color-accent-wash: oklch(93.5% 0.032 25);
+  --color-link: oklch(42% 0.105 250);
+  --color-good: oklch(45% 0.095 155);
+  --color-good-wash: oklch(94% 0.03 155);
+  --color-warn: oklch(58% 0.12 65);
+  --color-focus: oklch(42% 0.105 250);
+
+  /* ---------- TYPE FAMILIES ---------- */
+  --font-display: var(--font-instrument-serif), Georgia, serif;
+  --font-body: var(--font-public-sans), system-ui, sans-serif;
+  --font-data: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /* ---------- TYPE SCALE ---------- */
+  --text-display: clamp(2.75rem, 6vw, 4.5rem);
+  --text-display-s: clamp(2rem, 4vw, 2.875rem);
+  --text-2xl: 1.75rem;
+  --text-xl: 1.3125rem;
+  --text-lg: 1.0625rem;
+  --text-base: 0.9375rem;
+  --text-sm: 0.8125rem;
+  --text-xs: 0.75rem;
+  --text-micro: 0.6875rem;
+
+  /* ---------- SPACE · 4pt ---------- */
+  --space-2xs: 0.25rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4.5rem;
+
+  /* ---------- GEOMETRY ---------- */
+  --radius-sharp: 0px;
+  --radius-hair: 2px;
+  --rule-hair: 1px;
+  --rail-width: 13.5rem;
+  --measure: 34rem;
+  --margin-col: 15rem;
+
+  /* ---------- MOTION ---------- */
+  --dur-fast: 110ms;
+  --dur-base: 180ms;
+  --dur-slow: 320ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in: cubic-bezier(0.64, 0, 0.78, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}

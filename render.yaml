@@ -1,0 +1,112 @@
+# ---------- RENDER ----------
+# One web service, which is what the free plan allows.
+#
+# Render's free tier has no Background Workers — those require a paid instance.
+# Rather than make a free deploy impossible, the job worker runs inside the web
+# process (RUN_WORKER_IN_WEB). This was never a compromise forced late: jobs are
+# claimed with FOR UPDATE SKIP LOCKED, so an embedded worker and a dedicated one
+# are interchangeable. Promoting to a separate service is a config change, and
+# the commented block at the bottom is ready for it.
+#
+# Secrets are sync: false so Render prompts for them instead of keeping them in
+# this file.
+
+services:
+  - type: web
+    name: rebuttal
+    runtime: node
+    plan: free
+    region: oregon
+
+    # --include=dev is required, not optional. NODE_ENV=production below applies
+    # during build too, and npm ci then skips devDependencies — which is where
+    # tsx, drizzle-kit and typescript live. Without it the build dies on
+    # db:migrate with "tsx: not found".
+    #
+    # Migrations run at build time, when env vars are available and exactly one
+    # process is running. Doing it at boot would race across restarts.
+    buildCommand: npm ci --include=dev && npm run db:migrate && npm run build
+    startCommand: npm run start
+
+    healthCheckPath: /api/health
+
+    envVars:
+      - key: NODE_VERSION
+        value: 22.22.0
+      - key: NODE_ENV
+        value: production
+
+      # Must be the public Render URL. The keep-alive ping goes out over the
+      # internet and back, because Render only counts inbound traffic — a
+      # localhost call would not reset the idle timer.
+      - key: APP_BASE_URL
+        sync: false
+
+      # ---------- BACKGROUND ----------
+      - key: RUN_WORKER_IN_WEB
+        value: "true"
+      - key: KEEPALIVE
+        value: "true"
+      # A free service idles after 15 minutes. Sixty seconds keeps it warm with
+      # room to spare; lower values add requests without adding safety.
+      - key: KEEPALIVE_INTERVAL_MS
+        value: "60000"
+
+      # ---------- DATABASE ----------
+      - key: DATABASE_URL
+        sync: false
+
+      # ---------- PAYPAL ----------
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: PAYPAL_API_BASE
+        value: https://api-m.sandbox.paypal.com
+      - key: PAYPAL_MERCHANT_ID
+        sync: false
+      # Re-register the webhook against the Render URL after the first deploy
+      # and set this, or deliveries are rejected unverified.
+      - key: PAYPAL_WEBHOOK_ID
+        sync: false
+
+      # ---------- AI ----------
+      - key: AI_PROVIDER
+        value: gemini
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-3.1-flash-lite
+      - key: GEMINI_EMBEDDING_MODEL
+        value: gemini-embedding-001
+      - key: OPENAI_API_KEY
+        sync: false
+
+      - key: LOG_LEVEL
+        value: info
+
+# ---------- SCALING OUT ----------
+# On a paid plan, set RUN_WORKER_IN_WEB=false above and uncomment this. The
+# queue needs no other change: SKIP LOCKED already allows any number of
+# workers to share it.
+#
+# - type: worker
+#   name: rebuttal-worker
+#   runtime: node
+#   plan: starter
+#   region: oregon
+#   buildCommand: npm ci
+#   startCommand: npx tsx worker/index.ts
+#   envVars:
+#     - key: NODE_VERSION
+#       value: 22.22.0
+#     - key: DATABASE_URL
+#       sync: false
+#     - key: PAYPAL_CLIENT_ID
+#       sync: false
+#     - key: PAYPAL_CLIENT_SECRET
+#       sync: false
+#     - key: PAYPAL_MERCHANT_ID
+#       sync: false
+#     - key: GEMINI_API_KEY
+#       sync: false

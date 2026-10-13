@@ -1,0 +1,238 @@
+/* ---------- CASE HEADER ---------- */
+
+.head {
+  padding-bottom: var(--space-md);
+}
+
+.caseId {
+  font-family: var(--font-data);
+  font-size: var(--text-2xl);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.claimLine {
+  margin-top: var(--space-2xs);
+  max-width: var(--measure);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  line-height: 1.25;
+  color: var(--color-ink-2);
+}
+
+.reason {
+  color: var(--color-accent);
+}
+
+.fixtureNote {
+  margin-top: var(--space-xs);
+  font-size: var(--text-xs);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-warn);
+}
+
+/* ---------- FACT GRID ---------- */
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--space-md) var(--space-lg);
+  margin: 0;
+  padding: var(--space-md) 0;
+  border-top: var(--rule-hair) solid var(--color-rule);
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.fact dd {
+  margin: 0;
+  font-size: var(--text-sm);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- DEADLINE ---------- */
+
+.deadline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-lg) 0;
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.deadlineNote {
+  max-width: var(--measure);
+  font-size: var(--text-sm);
+  color: var(--color-ink-3);
+}
+
+/* ---------- ACTIVITY ---------- */
+
+.activity {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md) 0;
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.activityList {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.activityItem {
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: var(--space-sm);
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+}
+
+.activityTime {
+  font-size: var(--text-xs);
+  color: var(--color-ink-3);
+}
+
+/* ---------- PACKET ---------- */
+
+.sectionHead {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-md);
+}
+
+.packet {
+  padding: var(--space-xl) 0;
+  border-bottom: var(--rule-hair) solid var(--color-rule);
+}
+
+.pending {
+  max-width: var(--measure);
+  color: var(--color-ink-3);
+}
+
+.annotated {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.claimRow {
+  display: grid;
+  grid-template-columns: minmax(0, var(--measure)) minmax(0, var(--margin-col));
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+.claim {
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.marker {
+  font-size: 0.6em;
+  font-weight: 500;
+  color: var(--color-accent);
+  margin-left: 0.15em;
+  vertical-align: super;
+  line-height: 0;
+}
+
+.note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: var(--space-xs);
+  padding-left: var(--space-sm);
+  border-left: var(--rule-hair) solid var(--color-rule-strong);
+  font-size: var(--text-xs);
+  line-height: 1.45;
+}
+
+.noteNum {
+  grid-row: span 3;
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.noteKind {
+  color: var(--color-ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: var(--text-micro);
+}
+
+.noteTitle {
+  color: var(--color-ink-2);
+  overflow-wrap: anywhere;
+}
+
+.noteQuote {
+  margin-top: var(--space-2xs);
+  color: var(--color-ink-3);
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- NARRATIVE ---------- */
+
+.narrative {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-top: var(--space-xl);
+  padding-top: var(--space-md);
+  border-top: var(--rule-hair) solid var(--color-rule);
+  max-width: var(--measure);
+}
+
+.narrative p {
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-ink-2);
+  text-wrap: pretty;
+}
+
+.provenance {
+  margin-top: var(--space-md);
+  font-family: var(--font-data);
+  font-size: var(--text-micro);
+  color: var(--color-ink-3);
+  overflow-wrap: anywhere;
+}
+
+.error {
+  margin-top: var(--space-xs);
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+  overflow-wrap: anywhere;
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 900px) {
+  .claimRow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xs);
+  }
+
+  .claim {
+    font-size: var(--text-base);
+  }
+
+  .activityItem {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}

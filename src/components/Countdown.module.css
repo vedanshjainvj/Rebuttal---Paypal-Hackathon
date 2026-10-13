@@ -1,0 +1,66 @@
+/* ---------- COUNTDOWN ---------- */
+
+.wrap {
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  min-width: 0;
+}
+
+.value {
+  font-size: var(--text-sm);
+  color: var(--color-ink-2);
+  white-space: nowrap;
+}
+
+.value[data-band="near"] {
+  color: var(--color-warn);
+}
+
+.value[data-band="critical"] {
+  color: var(--color-accent);
+  font-weight: 500;
+}
+
+.value[data-band="closed"] {
+  color: var(--color-ink-3);
+}
+
+.track {
+  display: block;
+  height: 2px;
+  width: 100%;
+  min-width: 4rem;
+  background: var(--color-rule);
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  background: var(--color-ink-3);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+
+.fill[data-band="near"] {
+  background: var(--color-warn);
+}
+
+.fill[data-band="critical"] {
+  background: var(--color-accent);
+}
+
+/* ---------- LARGE · case-file header ---------- */
+
+.wrap[data-size="large"] .value {
+  font-family: var(--font-data);
+  font-size: var(--text-2xl);
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.wrap[data-size="large"] .track {
+  height: 3px;
+}

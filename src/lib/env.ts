@@ -57,21 +57,11 @@ const schema = z.object({
   WORKER_ID: z.string().default(() => `worker-${process.pid}`),
 
   // ---------- DEPLOYMENT ----------
-  // Render's free tier has no Background Workers, so on a free deploy the
-  // worker runs inside the web process. Locally it stays off, because
-  // `npm run worker` is the separate process you watch.
-  RUN_WORKER_IN_WEB: z
-    .enum(["true", "false"])
-    .optional()
-    .transform((v) => v === "true"),
-
-  // Render idles a free web service after 15 minutes without traffic, and a
-  // cold start then costs about a minute — long enough to lose a judge. The
-  // app pings its own public URL to stay warm.
-  KEEPALIVE: z
-    .enum(["true", "false"])
-    .optional()
-    .transform((v) => v === "true"),
+  // Parsed as raw strings here; the booleans are resolved below, where
+  // NODE_ENV is known. Both default ON in production — see the note on
+  // resolveDeploymentFlags.
+  RUN_WORKER_IN_WEB: z.enum(["true", "false"]).optional(),
+  KEEPALIVE: z.enum(["true", "false"]).optional(),
   KEEPALIVE_INTERVAL_MS: z.coerce.number().int().min(5_000).default(60_000),
 
   // ---------- FEATURE FLAGS ----------
@@ -122,6 +112,38 @@ function load(): Env {
 export const env = load();
 
 export const isProduction = env.NODE_ENV === "production";
+
+// ---------- DEPLOYMENT FLAGS ----------
+// Resolved rather than defaulted in the schema, because the right default
+// depends on NODE_ENV.
+//
+// Both default ON in production, and that choice is deliberate. Render's free
+// tier has no Background Workers, so the embedded worker is the only thing
+// that processes jobs there. A service created by hand in the dashboard —
+// rather than from render.yaml — never receives the blueprint's env vars, and
+// the previous opt-in default meant it booted perfectly, served pages, and
+// silently did no work. Nothing failed; drafts simply never happened. An
+// unset variable should not be able to cause that.
+//
+// Running a worker twice is harmless: jobs are claimed with FOR UPDATE SKIP
+// LOCKED, so an embedded worker alongside a dedicated one is safe. Set
+// RUN_WORKER_IN_WEB=false explicitly once a separate worker service exists.
+
+function flag(value: "true" | "false" | undefined, fallback: boolean): boolean {
+  if (value === undefined) return fallback;
+  return value === "true";
+}
+
+/** Whether the web process also runs the job worker. */
+export const runWorkerInWeb = flag(env.RUN_WORKER_IN_WEB, isProduction);
+
+/**
+ * Whether to self-ping to stay warm. Only meaningful behind a public URL;
+ * the ping has to leave and re-enter for Render to count it as traffic.
+ */
+export const keepAliveEnabled =
+  flag(env.KEEPALIVE, isProduction) &&
+  !/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])/i.test(env.APP_BASE_URL);
 
 /** True when a second provider is configured and can absorb a primary outage. */
 export const hasFallbackProvider =

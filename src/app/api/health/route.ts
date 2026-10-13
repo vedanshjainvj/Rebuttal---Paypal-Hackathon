@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { checkDatabase } from "@/lib/db/client";
-import { env, hasFallbackProvider } from "@/lib/env";
+import { env, hasFallbackProvider, keepAliveEnabled, runWorkerInWeb } from "@/lib/env";
 import { subscriberCount } from "@/lib/events/bus";
 import { deadJobCount, pendingJobCount } from "@/lib/jobs/queue";
 
@@ -33,7 +33,18 @@ export async function GET() {
       configured: Boolean(env.PAYPAL_CLIENT_ID && env.PAYPAL_CLIENT_SECRET),
       apiBase: env.PAYPAL_API_BASE,
       webhookRegistered: Boolean(env.PAYPAL_WEBHOOK_ID),
+      // Last six characters only — enough to confirm the deployed value
+      // matches the registered webhook, without printing an identifier in
+      // full. A boolean alone cannot distinguish "configured correctly" from
+      // "configured with a webhook that was deleted three deploys ago", which
+      // presents as deliveries silently failing signature verification.
+      webhookIdSuffix: env.PAYPAL_WEBHOOK_ID
+        ? `…${env.PAYPAL_WEBHOOK_ID.slice(-6)}`
+        : null,
     },
+    // Surfaced because an embedded worker that is off produces no error at
+    // all: the service looks healthy and simply never drafts anything.
+    worker: { embedded: runWorkerInWeb, keepAlive: keepAliveEnabled },
     ai: {
       provider: env.AI_PROVIDER,
       model: env.GEMINI_MODEL,

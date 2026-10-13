@@ -8,7 +8,7 @@
 // Render's free tier behaves.
 
 export async function startBackgroundServices() {
-  const { env, isProduction } = await import("./lib/env");
+  const { env, isProduction, keepAliveEnabled, runWorkerInWeb } = await import("./lib/env");
   const { childLogger } = await import("./lib/logger");
   const log = childLogger("instrumentation");
 
@@ -21,7 +21,16 @@ export async function startBackgroundServices() {
   // jobs are claimed with FOR UPDATE SKIP LOCKED, so an embedded worker and a
   // standalone one can run side by side without ever handling the same job.
   // Moving to a dedicated worker later is a configuration change.
-  if (env.RUN_WORKER_IN_WEB) {
+  if (!runWorkerInWeb && isProduction) {
+    // The failure this guards against is silent: the service boots, serves
+    // pages, and never drafts anything.
+    log.warn(
+      "embedded worker is OFF in production — no jobs will be processed. " +
+        "Set RUN_WORKER_IN_WEB=true, or run a dedicated worker service.",
+    );
+  }
+
+  if (runWorkerInWeb) {
     const { Worker } = await import("./lib/jobs/worker");
     const worker = new Worker({ workerId: `web-${process.pid}` });
 
@@ -45,12 +54,18 @@ export async function startBackgroundServices() {
   // The request must leave and re-enter over the public hostname; Render
   // counts inbound traffic, so an internal localhost call would not reset the
   // idle timer.
-  if (env.KEEPALIVE) {
+  if (!keepAliveEnabled && isProduction) {
+    log.warn(
+      { appBaseUrl: env.APP_BASE_URL },
+      "keep-alive is off in production — the service will sleep after 15 minutes idle. " +
+        "Check APP_BASE_URL is the public URL, or set KEEPALIVE=true.",
+    );
+  }
+
+  if (keepAliveEnabled) {
     const target = new URL("/api/health", env.APP_BASE_URL).toString();
 
-    if (target.includes("localhost") || target.includes("127.0.0.1")) {
-      log.warn({ target }, "keep-alive disabled: APP_BASE_URL is not public");
-    } else {
+    {
       log.info(
         { target, intervalMs: env.KEEPALIVE_INTERVAL_MS },
         "keep-alive enabled",
@@ -83,8 +98,8 @@ export async function startBackgroundServices() {
   log.info(
     {
       production: isProduction,
-      embeddedWorker: env.RUN_WORKER_IN_WEB,
-      keepAlive: env.KEEPALIVE,
+      embeddedWorker: runWorkerInWeb,
+      keepAlive: keepAliveEnabled,
     },
     "server ready",
   );

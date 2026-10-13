@@ -19,6 +19,8 @@
     "packet:draft": "tsx scripts/packet-draft.ts",
     "evidence:seed": "tsx scripts/evidence-seed.ts",
     "evidence:search": "tsx scripts/evidence-search.ts",
+    "evidence:for-dispute": "tsx scripts/evidence-for-dispute.ts",
+    "db:reset": "tsx scripts/db-reset.ts",
     "paypal:doctor": "tsx scripts/paypal-doctor.ts",
     "paypal:webhook": "tsx scripts/paypal-webhook.ts",
     "db:studio": "drizzle-kit studio",

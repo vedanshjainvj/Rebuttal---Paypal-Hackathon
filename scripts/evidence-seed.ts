@@ -139,6 +139,37 @@ That commitment was made on 6 October. Three business days elapsed on 9 October.
 The customer followed up on 10 October stating the money had not arrived. No agent reply logged.`,
   },
 
+  // ---------- LIVE SANDBOX DISPUTE ----------
+  // Records for the actual PayPal sandbox transaction behind dispute
+  // PP-R-ZKF-10190826. In a real deployment these would arrive from the
+  // merchant's order system and carrier webhook; here they are written by
+  // hand so the live case has something to be grounded against.
+  //
+  // The transaction id is what anchors linkage. Without it appearing in at
+  // least one record, the dispute has nothing to connect to and the system
+  // correctly refuses to draft.
+  {
+    kind: "ORDER",
+    title: "Order 5021 — sandbox buyer",
+    sourceRef: "orders table, row 5021",
+    occurredAt: "2026-10-09T18:00:00Z",
+    content: `Order 5021 placed 9 October 2026.
+Items: 1 × Fernleaf Sample Card, SKU TP-SAMPLE-01.
+Order total 1.00 USD. Paid via PayPal, transaction 5NA45408PT718622X.
+Ship-to address matches the address captured at checkout. No address change was
+requested after purchase. Dispatched same day by tracked post.`,
+  },
+  {
+    kind: "CARRIER",
+    title: "Royal Mail delivery scan — tracking RM884120077GB",
+    sourceRef: "carrier webhook, 11 October 2026 11:24",
+    occurredAt: "2026-10-11T11:24:00Z",
+    content: `Carrier Royal Mail, tracking number RM884120077GB, service Tracked 48.
+Status: DELIVERED. Delivered 11 October 2026 at 11:24.
+Location: letterbox. Associated with order 5021, transaction 5NA45408PT718622X.
+Scan sequence: accepted 9 Oct 17:52, in transit 10 Oct, delivered 11 Oct 11:24.`,
+  },
+
   // ---------- GENERAL RECORDS ----------
   {
     kind: "POLICY",
